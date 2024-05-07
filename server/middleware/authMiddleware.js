@@ -4,11 +4,13 @@ const User = require('../models/User');
 const jwtSecret = process.env.JWT_SECRET;
 
 const authMiddleware = async (req, res, next) => {
-  const token = req.headers.authorization;
+  const authHeader = req.headers.authorization;
 
-  if (!token) {
+  if (!authHeader) {
     return res.status(401).json({ message: 'Authorization header missing' });
   }
+
+  const token = authHeader.split(' ')[1]; // Extract token from Authorization header
 
   try {
     const decoded = jwt.verify(token, jwtSecret);

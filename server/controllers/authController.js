@@ -1,8 +1,8 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
-
-const jwtSecret =  process.env.JWT_SECRET;
+const UserProfile = require('../models/UserProfile'); // Import UserProfile model
+const jwtSecret = process.env.JWT_SECRET;
 
 // Function to generate JWT token
 const generateToken = (userId) => {
@@ -12,7 +12,7 @@ const generateToken = (userId) => {
 // Handle user registration
 const register = async (req, res) => {
   const { username, email, password } = req.body;
-
+console.log(req.body);
   try {
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -26,14 +26,13 @@ const register = async (req, res) => {
       userId: newUser._id,
       fullName: username, // You can set other profile fields here
     });
-    await userProfile.save();
+    await userProfile.save(userProfile);
 
     const token = generateToken(newUser._id);
     res.status(201).json({ message: 'User registered successfully', token });
   } catch (error) {
     console.error('Registration failed:', error);
     res.status(500).json({ message: 'Registration failed', error: error.message });
-  
   }
 };
 
@@ -59,4 +58,4 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { register, login };
+module.exports = { register, login, };

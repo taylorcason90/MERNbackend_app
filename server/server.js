@@ -4,11 +4,12 @@ const { connectToMongoDB } = require('./db/mongoDB');
 const authRoutes = require('./routes/authRoutes');
 const postRoutes = require('./routes/postRoutes');
 const profileRoutes = require('./routes/profileRoutes');
-const authMiddleware = require('./middleware/authMiddleware'); // Import authMiddleware
+const authMiddleware = require('./middleware/authMiddleware');
+
 require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 6000;
+const PORT = process.env.PORT || 4000;
 
 app.use(cors());
 app.use(express.json());
@@ -18,7 +19,7 @@ connectToMongoDB()
     // Proxy middleware
     app.use('/api/auth', authRoutes);
     app.use('/api/posts', postRoutes);
-    app.use('/api/profile', profileRoutes); // Use correct path for profileRoutes
+    app.use('/api/profile', authMiddleware, profileRoutes); // Use authMiddleware for profileRoutes
 
     // Start the server
     app.listen(PORT, () => {

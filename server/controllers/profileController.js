@@ -7,6 +7,7 @@ exports.getUserProfile = async (req, res) => {
       email: user.email,
       // Add other profile data as needed
     });
+
   } catch (error) {
     console.error('Error fetching user profile:', error);
     res.status(500).json({ message: 'Internal server error' });
